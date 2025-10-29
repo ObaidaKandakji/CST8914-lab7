@@ -58,9 +58,7 @@
         <!-- Fix: Associate label with textarea via for/id -->
         <label for="biography">Biography</label>
         <!-- Fix: Remove invalid textarea type attribute; add aria-describedby to expose inline instruction -->
-        <textarea id="biography" name="biography" aria-describedby="biography_hint biography_description" placeholder="Summarize your experience with JavaScript frameworks."></textarea>
-        <!-- Fix: Convert instruction into an element with ID so SRs get it -->
-        <span id="biography_hint">Include examples on your skills in JavaScript.</span>
+        <textarea id="biography" name="biography" aria-describedby="biography_hint biography_description" placeholder="Include examples on your skills in JavaScript."></textarea>
         <!-- Fix: Inline error container -->
         <div id="biography_description" class="error" hidden></div>
       </div>
