@@ -47,7 +47,7 @@
         <!-- Fix: Associate label with input via for/id + expose required in text and to SRs -->
         <label for="name">Full name <span class="required" aria-hidden="true">*</span><span class="visually-hidden"> (required)</span></label>
         <!-- Fix: Mark required and connect to inline error container -->
-        <input id="name" name="name" type="text" required aria-describedby="name_hint name_description" />
+        <input id="name" name="name" type="text" required aria-describedby="name_hint name_description" placeholder="e.g., Jane Doe" />
         <!-- Fix: Inline hint connected via aria-describedby -->
         <span id="name_hint" class="visually-hidden">Enter first and last name.</span>
         <!-- Fix: Inline error container used by JS via aria-describedby -->
@@ -58,7 +58,7 @@
         <!-- Fix: Associate label with textarea via for/id -->
         <label for="biography">Biography</label>
         <!-- Fix: Remove invalid textarea type attribute; add aria-describedby to expose inline instruction -->
-        <textarea id="biography" name="biography" aria-describedby="biography_hint biography_description"></textarea>
+        <textarea id="biography" name="biography" aria-describedby="biography_hint biography_description" placeholder="Summarize your experience with JavaScript frameworks."></textarea>
         <!-- Fix: Convert instruction into an element with ID so SRs get it -->
         <span id="biography_hint">Include examples on your skills in JavaScript.</span>
         <!-- Fix: Inline error container -->
