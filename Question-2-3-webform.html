@@ -1,136 +1,200 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>Form validation with messages on top: Code example - Accessibility Developer Guide example</title>
-        <meta charset="utf-8">
-        <style>.control, fieldset {
-      margin: 6px 0;
-    }
-    
-    label {
-      display: inline-block;
-      width: 120px;
-      vertical-align: top;
-    }
-    
-    input + label {
-      width: auto;
-    }
-    
-    .error, .required {
-      color: red;
-    }
-    
-    fieldset ul {
-      margin: 0;
-    }</style>
-    </head>
-    <body>
-        <h1>Feedback form</h1>
-    <form>
+  <head>
+    <title>Form validation with messages on top: Code example - Accessibility Developer Guide example</title>
+    <meta charset="utf-8">
+    <style>
+      .control, fieldset { margin: 6px 0; }
+
+      label { display: inline-block; width: 120px; vertical-align: top; }
+      input + label { width: auto; }
+
+      .error, .required { color: red; }
+
+      fieldset ul { margin: 0; }
+
+      /* Fix: SR-only helper for inline instructions like */
+      .visually-hidden {
+        position: absolute !important;
+        width: 1px; height: 1px;
+        padding: 0; margin: -1px;
+        overflow: hidden; clip: rect(0 0 0 0);
+        white-space: nowrap; border: 0;
+      }
+
+      /* Fix: Make focus visible when we programmatically move it */
+      :focus-visible { outline: 3px solid #005fcc; outline-offset: 2px; }
+
+      /* Fix: Basic styling for dynamic summary + success */
+      fieldset.errors { border: 2px solid #b00020; background: #ffecec; }
+      #success-message { border: 2px solid #2e7d32; background: #e8f5e9; padding: 8px; margin: 8px 0; }
+    </style>
+  </head>
+  <body>
+    <h1>Feedback form</h1>
+    <!-- Fix: Success region appears ONLY when all inputs valid; announced politely -->
+    <div id="success-message" role="status" hidden>All inputs are valid.</div>
+
+    <!-- Fix: Form-level instruction identified in text and exposed to SRs -->
+    <p id="form-instructions">
+      Fields marked with <span class="required" aria-hidden="true">*</span>
+      <span class="visually-hidden"> (required)</span> are required.
+    </p>
+
+    <!-- Fix: Reference the form-level instructions -->
+    <form aria-describedby="form-instructions">
+      <div class="control">
+        <!-- Fix: Associate label with input via for/id + expose required in text and to SRs -->
+        <label for="name">Full name <span class="required" aria-hidden="true">*</span><span class="visually-hidden"> (required)</span></label>
+        <!-- Fix: Mark required and connect to inline error container -->
+        <input id="name" name="name" type="text" required aria-describedby="name_hint name_description" />
+        <!-- Fix: Inline hint connected via aria-describedby -->
+        <span id="name_hint" class="visually-hidden">Enter first and last name.</span>
+        <!-- Fix: Inline error container used by JS via aria-describedby -->
+        <div id="name_description" class="error" hidden></div>
+      </div>
+
+      <div class="control">
+        <!-- Fix: Associate label with textarea via for/id -->
+        <label for="biography">Biography</label>
+        <!-- Fix: Remove invalid textarea type attribute; add aria-describedby to expose inline instruction -->
+        <textarea id="biography" name="biography" aria-describedby="biography_hint biography_description"></textarea>
+        <!-- Fix: Convert instruction into an element with ID so SRs get it -->
+        <span id="biography_hint">Include examples on your skills in JavaScript.</span>
+        <!-- Fix: Inline error container -->
+        <div id="biography_description" class="error" hidden></div>
+      </div>
+
+      <!-- Fix: Group radios with fieldset/legend; identify group and required in text -->
+      <fieldset aria-describedby="gender_description">
+        <legend>Gender <span class="required" aria-hidden="true">*</span><span class="visually-hidden"> (required)</span></legend>
         <div class="control">
-          <label>Full name <span class="required">*</span></label><input id="name" name="name" type="text" />
+          <!-- Fix: Associate each radio with its label -->
+          <input id="gender_male" name="gender" type="radio" value="male" required />
+          <label for="gender_male">Male</label>
         </div>
         <div class="control">
-          <label>Biography</label><textarea id="biography" name="biography" type="text"></textarea>
-          <span>Include examples on your skills in JavaScript.</span>
+          <input id="gender_female" name="gender" type="radio" value="female" />
+          <label for="gender_female">Female</label>
         </div>
-        
-          <div>Gender</div>
-          <div class="control">
-            <input id="gender_male" name="gender" type="radio" value="male" /><label>Male</label>
-          </div>
-          <div class="control">
-            <input id="gender_female" name="gender" type="radio" value="female" /><label>Female</label>
-          </div>
-        
-        <div class="control">
-          <input id="accept_agbs" name="accept_agbs" type="checkbox" value="1" /><label>I accept the terms and conditions</label>
-        </div>
-        <div class="control">
-          <input name="validate" type="hidden" value="1" /><input type="submit" value="Register" />
-        </div>
-      </form>
-      
-          <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-          <script>"use strict";
-      
-      ;
+        <!-- Fix: Inline error container for the radio group -->
+        <div id="gender_description" class="error" hidden></div>
+      </fieldset>
+
+      <div class="control">
+        <!-- Fix: Associate checkbox/label and mark required in text -->
+        <input id="accept_agbs" name="accept_agbs" type="checkbox" value="1" required aria-describedby="accept_agbs_description" />
+        <label for="accept_agbs">I accept the terms and conditions <span class="required" aria-hidden="true">*</span><span class="visually-hidden"> (required)</span></label>
+        <!-- Fix: Inline error container -->
+        <div id="accept_agbs_description" class="error" hidden></div>
+      </div>
+
+      <div class="control">
+        <input name="validate" type="hidden" value="1" />
+        <input type="submit" value="Register" />
+      </div>
+    </form>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script>
+      "use strict";
+
       (function () {
         var validateInput;
-      
+
         $.urlParam = function (name) {
           var results;
           results = new RegExp('[?&]' + name + '=([^&#]*)').exec(window.location.href);
-      
+
           if (results === null) {
             return null;
           } else {
             return decodeURI(results[1]) || null;
           }
         };
-      
+
         validateInput = function validateInput(input, message) {
-          var $elementToDescribe, $error, $errorContainer, $fieldset, $input, $referencedElement, value;
+          var $elementToDescribe, $error, $errorContainer, $fieldset, $inlineError, $input, $referencedElement, value;
           $input = $('[name="' + input + '"]');
-      
+
           if ((value = $.urlParam(input)) === null) {
+            /* Fix: Create an error summary that's accessible to SRs & keyboard */
             if ($('fieldset.errors').length === 0) {
-              $('form').prepend('<fieldset class="errors"><legend>Errors</legend><ul></ul></fieldset>');
+              $('form').prepend(
+                '<fieldset class="errors" role="alert" aria-live="assertive" aria-labelledby="errors-title" tabindex="-1">' +
+                  '<legend id="errors-title">Errors</legend><ul></ul></fieldset>'
+              );
             }
-      
+
             $referencedElement = null;
             $elementToDescribe = null;
             $errorContainer = $('fieldset.errors ul');
-      
+
             if ($input.is(':radio')) {
               $fieldset = $input.closest('fieldset');
               $elementToDescribe = $fieldset;
-              $referencedElement = $input.filter(':first');
+              $referencedElement = $input.filter(':first'); // focus first radio in group
             } else {
               $elementToDescribe = $input;
               $referencedElement = $input;
             }
-      // R.G. hint: fix next line ;)
-            $error = $('<a>' + message + '</a>');
-            $error.click(function (e) {
+
+            // Fix: Create/target inline error element and populate text
+            $inlineError = $('#' + input + '_description');
+            if (!$inlineError.length) {
+              $inlineError = $('<div class="error" id="' + input + '_description"></div>').insertAfter($elementToDescribe);
+            }
+            $inlineError.text(message).prop('hidden', false);
+
+            // Fix: Tie control to inline error and mark invalid for SRs
+            $elementToDescribe.attr({'aria-describedby': ($elementToDescribe.attr('aria-describedby') || '').trim() + ' ' + input + '_description', 'aria-invalid':'true'});
+
+            // R.G. hint: fix next line ;)
+            // Fix: Make each error in the summary a real link to the field
+            $error = $('<a href="#' + $referencedElement.attr('id') + '">' + message + '</a>');
+
+            $error.on('click', function (e) {
               // If we rely on the link's href pointing to the input's ID, it doesn't trigger forms mode in screen readers
               $referencedElement.focus();
               return e.preventDefault();
             });
-            $elementToDescribe.attr('aria-describedby', input + '_description');
+
             $errorContainer.append('<li>').find('li:last').append($error);
-      
+
+            // Fix: Move focus to the error summary once
             if ($(':not(form):focus').length === 0) {
+              var $summary = $('fieldset.errors');
               // See https://stackoverflow.com/questions/46134247/jquery-setting-focus-doesnt-work-in-ie11/
-            
+              setTimeout(function(){ $summary.focus(); }, 0);
             }
           } else {
+            // Populate values from URL
             if ($input.is(':checkbox')) {
-              $input.attr('checked', true);
+              $input.prop('checked', true);
             }
-      
+
             if ($input.is(':radio')) {
-              return $input.filter('[value="' + value + '"]').attr('checked', true);
+              return $input.filter('[value="' + value + '"]').prop('checked', true);
             } else {
               return $input.val(value);
             }
           }
         };
-      
+
         $(document).ready(function () {
           if ($.urlParam('validate')) {
-            validateInput('name', 'Please enter your name!');
-            validateInput('biography', 'Please tell us something about your history!');
-            validateInput('gender', 'Please tell us your gender!');
-            validateInput('accept_agbs', 'You must accept our terms and conditions!');
-      
-            if ($('.error').length === 0) {
-              return alert('All inputs are valid.');
+            // Fix: Run validations (kept list, messages clarified)
+            validateInput('name', 'Please enter your name.');
+            validateInput('gender', 'Please select your gender.');
+            validateInput('accept_agbs', 'You must accept our terms and conditions.');
+
+            // Fix: Show success message ONLY when there are no errors
+            if ($('fieldset.errors li').length === 0) {
+              $('#success-message').prop('hidden', false).attr('tabindex','-1').focus();
             }
           }
         });
-      }).call(void 0);</script>
-                
-        </body>
-      </html>
+      }).call(void 0);
+    </script>
+  </body>
+</html>
